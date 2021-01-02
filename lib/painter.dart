@@ -8,7 +8,12 @@ class MyPainter extends CustomPainter {
 
   double statusBarHeight, screenWidth;
 
-  MyPainter({this.context, this.containerHeight, this.center, this.radius, this.color}) {
+  MyPainter(
+      {this.context,
+      this.containerHeight,
+      this.center,
+      this.radius,
+      this.color}) {
     statusBarHeight = MediaQuery.of(context).padding.top;
     screenWidth = MediaQuery.of(context).size.width;
   }
@@ -16,9 +21,9 @@ class MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint circlePainter = Paint();
-
     circlePainter.color = color;
-    canvas.clipRect(Rect.fromLTWH(0, 0, screenWidth, containerHeight + statusBarHeight));
+    canvas.clipRect(
+        Rect.fromLTWH(0, 0, screenWidth, containerHeight + statusBarHeight));
     canvas.drawCircle(center, radius, circlePainter);
   }
 

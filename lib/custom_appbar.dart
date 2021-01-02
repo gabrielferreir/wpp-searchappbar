@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_appbar/painter.dart';
 
-class CustomScaffold extends StatefulWidget {
+class SearchScaffold extends StatefulWidget {
   final AppBar appBar;
   final Widget body;
   final FloatingActionButton floatingActionButton;
 
-  CustomScaffold({
+  SearchScaffold({
     this.appBar,
     this.body,
     this.floatingActionButton,
   });
 
   @override
-  CustomScaffoldState createState() => CustomScaffoldState();
+  SearchScaffoldState createState() => SearchScaffoldState();
 }
 
-class CustomScaffoldState extends State<CustomScaffold>
+class SearchScaffoldState extends State<SearchScaffold>
     with TickerProviderStateMixin {
   AnimationController _controllerHeight;
   AnimationController _controllerRipple;
@@ -25,22 +25,24 @@ class CustomScaffoldState extends State<CustomScaffold>
   bool _expanded = false;
   double rippleStartX = 0;
   double rippleStartY = 0;
+  FocusNode _focusNode = FocusNode();
 
   Tween<double> _tweenHeight = Tween(
     begin: 56,
-    end: 100,
+    end: 180,
   )..chain(CurveTween(curve: Curves.elasticOut));
 
   Tween<double> _tweenRipple = Tween(
     begin: 0,
-    end: 1,
-  );
+    end: 1.1,
+  )..chain(CurveTween(curve: Curves.elasticOut));
 
   animationStatusListener(AnimationStatus animationStatus) {
     if (animationStatus == AnimationStatus.completed) {
       setState(() {
         _expanded = true;
       });
+      _focusNode.requestFocus();
     }
     if (animationStatus == AnimationStatus.reverse) {
       setState(() {
@@ -88,56 +90,149 @@ class CustomScaffoldState extends State<CustomScaffold>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar != null
-          ? PreferredSize(
-              preferredSize: Size.fromHeight(_animationHeight.value),
-              child: Stack(
-                children: [
-                  AppBar(
-                    title: Text('Title'),
-                    actions: [
-                      GestureDetector(
-                        child: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: null,
-                        ),
-                        onTapUp: onSearchTapUp,
-                      ),
-                    ],
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(_animationHeight.value),
+          child: Stack(
+            children: [
+              AppBar(
+                title: Text('Search Appbar'),
+                actions: [
+                  GestureDetector(
+                    child: IconButton(
+                      icon: Icon(Icons.search, color: Colors.white),
+                      onPressed: null,
+                    ),
+                    onTapUp: onSearchTapUp,
                   ),
-                  AnimatedBuilder(
-                    animation: _animationRipple,
-                    builder: (context, child) {
-                      return CustomPaint(
-                        painter: MyPainter(
-                          containerHeight: _animationHeight.value,
-                          center: Offset(rippleStartX ?? 0, rippleStartY ?? 0),
-                          radius: _animationRipple.value *
-                              MediaQuery.of(context).size.width,
-                          color: Colors.grey,
-                          context: context,
-                        ),
-                      );
-                    },
-                  ),
-                  _expanded
-                      ? AppBar(
-                          backgroundColor: Colors.grey,
-                          title: Text('Expanded'),
-                          actions: [
-                            GestureDetector(
-                              child: IconButton(
-                                icon: Icon(Icons.clear),
-                                onPressed: null,
-                              ),
-                              onTapUp: cancelSearch,
-                            ),
-                          ],
-                        )
-                      : Container()
                 ],
-              ))
-          : null,
+              ),
+              AnimatedBuilder(
+                animation: _animationRipple,
+                builder: (context, child) {
+                  return CustomPaint(
+                    painter: MyPainter(
+                      containerHeight: _animationHeight.value,
+                      center: Offset(rippleStartX ?? 0, rippleStartY ?? 0),
+                      radius: _animationRipple.value *
+                          MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      context: context,
+                    ),
+                  );
+                },
+              ),
+              _expanded
+                  ? Container(
+                      height: _animationHeight.value +
+                          MediaQuery.of(context).padding.top,
+                      child: SafeArea(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    new EdgeInsets.symmetric(vertical: 20.0),
+                                prefixIcon: GestureDetector(
+                                  child: IconButton(
+                                    icon: Icon(Icons.arrow_back,
+                                        color: Colors.black38),
+                                    onPressed: null,
+                                  ),
+                                  onTapUp: cancelSearch,
+                                ),
+                                hintText: 'Search...',
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.black12),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.black12),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.black12),
+                                ),
+                              ),
+                              cursorColor: Colors.black12,
+                              focusNode: _focusNode,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Chip(
+                                          label: Text(
+                                            'Photos',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.photo,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                      Chip(
+                                          label: Text(
+                                            'Videos',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.videocam,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                      Chip(
+                                          label: Text(
+                                            'Links',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.link,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Chip(
+                                          label: Text(
+                                            'GIFs',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.gif,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                      Chip(
+                                          label: Text(
+                                            'Audio',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.headset,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                      Chip(
+                                          label: Text(
+                                            'Documents',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                          avatar: Icon(Icons.insert_drive_file,
+                                              size: 18, color: Colors.black54)),
+                                      SizedBox(width: 8),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container()
+            ],
+          )),
       body: widget.body,
       floatingActionButton: widget.floatingActionButton,
     );

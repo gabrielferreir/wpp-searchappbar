@@ -6,45 +6,33 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Search Appbar',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>  {
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      appBar: AppBar(
-        title: Text('Title'),
-      ),
-      body: Column(
-        children: [
-          Text('A'),
-          Text('B'),
-          Text('C'),
-          Text('D'),
-          Text('E'),
-          Text('F'),
-        ],
+    return SearchScaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) => ListTile(
+          title: Text('Line $index'),
+        ),
+        itemCount: 32,
       ),
     );
   }
