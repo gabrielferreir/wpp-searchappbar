@@ -1,15 +1,61 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_appbar/painter.dart';
 
 class SearchScaffold extends StatefulWidget {
+  final String labelSearch;
+  final Widget bodySearch;
+  final Widget searchBottom;
+  final double maxHeight;
+  final double minHeight;
+  final Function(String value) onChange;
+  final Function(String value) onSubmit;
+
   final AppBar appBar;
   final Widget body;
   final FloatingActionButton floatingActionButton;
+  final FloatingActionButtonLocation floatingActionButtonLocation;
+  final FloatingActionButtonAnimator floatingActionButtonAnimator;
+  final List<Widget> persistentFooterButtons;
+  final Widget drawer;
+  final Widget endDrawer;
+  final Color drawerScrimColor;
+  final Widget bottomNavigationBar;
+  final Widget bottomSheet;
+  final Color backgroundColor;
+  final bool resizeToAvoidBottomInset;
+  final bool primary;
+  final DragStartBehavior drawerDragStartBehavior;
+  final double drawerEdgeDragWidth;
+  final bool drawerEnableOpenDragGesture;
+  final bool endDrawerEnableOpenDragGesture;
 
   SearchScaffold({
+    this.labelSearch = '',
+    this.bodySearch,
+    this.searchBottom,
+    this.maxHeight = 180,
+    this.minHeight = 56,
+    this.onChange,
+    this.onSubmit,
     this.appBar,
     this.body,
     this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.floatingActionButtonAnimator,
+    this.persistentFooterButtons,
+    this.drawer,
+    this.endDrawer,
+    this.drawerScrimColor,
+    this.bottomNavigationBar,
+    this.bottomSheet,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+    this.primary = true,
+    this.drawerDragStartBehavior = DragStartBehavior.start,
+    this.drawerEdgeDragWidth,
+    this.drawerEnableOpenDragGesture,
+    this.endDrawerEnableOpenDragGesture,
   });
 
   @override
@@ -25,17 +71,9 @@ class SearchScaffoldState extends State<SearchScaffold>
   bool _expanded = false;
   double rippleStartX = 0;
   double rippleStartY = 0;
+  Tween<double> _tweenHeight;
+  Tween<double> _tweenRipple;
   FocusNode _focusNode = FocusNode();
-
-  Tween<double> _tweenHeight = Tween(
-    begin: 56,
-    end: 180,
-  )..chain(CurveTween(curve: Curves.elasticOut));
-
-  Tween<double> _tweenRipple = Tween(
-    begin: 0,
-    end: 1.1,
-  )..chain(CurveTween(curve: Curves.elasticOut));
 
   animationStatusListener(AnimationStatus animationStatus) {
     if (animationStatus == AnimationStatus.completed) {
@@ -53,6 +91,16 @@ class SearchScaffoldState extends State<SearchScaffold>
 
   @override
   void initState() {
+    _tweenHeight = Tween(
+      begin: widget.minHeight,
+      end: widget.maxHeight,
+    )..chain(CurveTween(curve: Curves.elasticOut));
+
+    _tweenRipple = Tween(
+      begin: 0,
+      end: 1.25,
+    )..chain(CurveTween(curve: Curves.elasticOut));
+
     _controllerHeight =
         AnimationController(vsync: this, duration: Duration(milliseconds: 180));
     _controllerRipple =
@@ -95,8 +143,9 @@ class SearchScaffoldState extends State<SearchScaffold>
           child: Stack(
             children: [
               AppBar(
-                title: Text('Search Appbar'),
+                title: widget.appBar?.title ?? '',
                 actions: [
+                  ...(widget.appBar?.actions ?? []),
                   GestureDetector(
                     child: IconButton(
                       icon: Icon(Icons.search, color: Colors.white),
@@ -140,7 +189,7 @@ class SearchScaffoldState extends State<SearchScaffold>
                                   ),
                                   onTapUp: cancelSearch,
                                 ),
-                                hintText: 'Search...',
+                                hintText: widget.labelSearch,
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide:
                                       new BorderSide(color: Colors.black12),
@@ -157,75 +206,7 @@ class SearchScaffoldState extends State<SearchScaffold>
                               cursorColor: Colors.black12,
                               focusNode: _focusNode,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Chip(
-                                          label: Text(
-                                            'Photos',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.photo,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                      Chip(
-                                          label: Text(
-                                            'Videos',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.videocam,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                      Chip(
-                                          label: Text(
-                                            'Links',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.link,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Chip(
-                                          label: Text(
-                                            'GIFs',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.gif,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                      Chip(
-                                          label: Text(
-                                            'Audio',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.headset,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                      Chip(
-                                          label: Text(
-                                            'Documents',
-                                            style: TextStyle(
-                                                color: Colors.black87),
-                                          ),
-                                          avatar: Icon(Icons.insert_drive_file,
-                                              size: 18, color: Colors.black54)),
-                                      SizedBox(width: 8),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
+                            widget.searchBottom ?? Container(),
                           ],
                         ),
                       ),
@@ -233,8 +214,23 @@ class SearchScaffoldState extends State<SearchScaffold>
                   : Container()
             ],
           )),
-      body: widget.body,
+      body: _expanded ? widget.bodySearch : widget.body,
       floatingActionButton: widget.floatingActionButton,
+      backgroundColor: widget.backgroundColor,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+      persistentFooterButtons: widget.persistentFooterButtons,
+      drawer: widget.drawer,
+      endDrawer: widget.endDrawer,
+      drawerScrimColor: widget.drawerScrimColor,
+      bottomNavigationBar: widget.bottomNavigationBar,
+      bottomSheet: widget.bottomSheet,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      primary: widget.primary,
+      drawerDragStartBehavior: widget.drawerDragStartBehavior,
+      drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
+      drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
+      endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
     );
   }
 }

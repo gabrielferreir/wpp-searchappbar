@@ -20,6 +20,7 @@ class MyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    print('radius: ${radius}');
     Paint circlePainter = Paint();
     circlePainter.color = color;
     canvas.clipRect(
@@ -28,7 +29,5 @@ class MyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
