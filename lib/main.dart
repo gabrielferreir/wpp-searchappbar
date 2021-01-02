@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Search Appbar'),
         actions: [IconButton(icon: Icon(Icons.build), onPressed: () {})],
       ),
+      drawer: Drawer(),
       body: ListView.builder(
         itemBuilder: (context, index) => ListTile(
           title: Text('Line $index'),

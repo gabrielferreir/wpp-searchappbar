@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_appbar/painter.dart';
 
-class SearchScaffold extends StatefulWidget {
+class SearchScaffold extends StatefulWidget  {
   final String labelSearch;
   final Widget bodySearch;
   final Widget searchBottom;
@@ -54,8 +54,8 @@ class SearchScaffold extends StatefulWidget {
     this.primary = true,
     this.drawerDragStartBehavior = DragStartBehavior.start,
     this.drawerEdgeDragWidth,
-    this.drawerEnableOpenDragGesture,
-    this.endDrawerEnableOpenDragGesture,
+    this.drawerEnableOpenDragGesture = true,
+    this.endDrawerEnableOpenDragGesture = true,
   });
 
   @override
